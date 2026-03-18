@@ -3,490 +3,402 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>OtakuNova — Download Manager</title>
-
+<title>OtakuNova — تنزيلات</title>
 <style>
-:root{
-  --bg:#0d0d0f;
-  --panel:#111214;
-  --accent:#ff3c3c;
-  --muted:#9aa0a6;
-  --glass: rgba(255,255,255,0.03);
-  --success: #2ecc71;
-  --danger:#e74c3c;
-  --card-radius:14px;
-}
+  :root{
+    --bg:#0d0d0d;
+    --card:#0f0f10;
+    --accent:#ff3c3c;
+    --muted:#9aa0a6;
+    --glass: rgba(255,255,255,0.03);
+    --success: #2ecc71;
+    --danger: #ff4b4b;
+    --radius:14px;
+    --gap:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    background:var(--bg);
+    color:#eee;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
 
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg,#070708 0%, #0d0d0f 100%);
-  color:#fff;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  padding:20px;
-  text-align:center;
-}
+  header{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    padding:18px;
+    border-bottom:1px solid rgba(255,255,255,0.03);
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  }
+  .logo{
+    width:48px;height:48px;border-radius:12px;
+    background:linear-gradient(135deg,#ff704d,#ff3c3c);
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.6);
+  }
+  header h1{font-size:18px;margin:0}
+  header p{margin:0;color:var(--muted);font-size:13px}
 
-/* container */
-.app{
-  max-width:900px;
-  margin:18px auto;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-  border-radius:var(--card-radius);
-  padding:18px;
-  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
-  border:1px solid rgba(255,255,255,0.03);
-}
+  main{padding:18px;max-width:920px;margin:0 auto}
 
-/* header */
-.header{
-  display:flex;
-  gap:16px;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:14px;
-}
-.brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-.logo{
-  width:56px;
-  height:56px;
-  border-radius:12px;
-  background:linear-gradient(135deg,#ff6b6b,#ff3c3c);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  font-size:22px;
-  box-shadow: 0 6px 20px rgba(255,60,60,0.08);
-}
-.title{
-  text-align:right;
-}
-.title h1{margin:0;font-size:20px}
-.title p{margin:0;color:var(--muted);font-size:13px}
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:var(--gap);
+  }
 
-/* controls */
-.controls{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  justify-content:flex-end;
-  flex-wrap:wrap;
-  margin-bottom:16px;
-}
-.input, .input-small{
-  background:var(--panel);
-  border-radius:10px;
-  padding:10px 12px;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.03);
-  outline:none;
-}
-.input{flex:1; min-width:180px;}
-.input-small{width:130px}
-.btn{
-  background:var(--accent);
-  border:none;
-  color:#fff;
-  padding:10px 14px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:600;
-  box-shadow: 0 6px 18px rgba(255,60,60,0.08);
-}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04)}
-.btn.small{padding:8px 10px;font-size:14px}
+  .card{
+    background:linear-gradient(180deg,var(--card),rgba(255,255,255,0.01));
+    padding:18px;border-radius:var(--radius);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.5);
+    border:1px solid rgba(255,255,255,0.02);
+  }
 
-/* downloads list */
-.list{
-  margin-top:12px;
-  display:grid;
-  gap:12px;
-}
-.card{
-  background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.02));
-  border-radius:12px;
-  padding:12px;
-  display:flex;
-  gap:12px;
-  align-items:center;
-  justify-content:space-between;
-  border:1px solid rgba(255,255,255,0.03);
-}
-.left{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  min-width:0;
-}
-.file-ico{
-  width:56px;height:56px;border-radius:10px;background:rgba(255,255,255,0.03);
-  display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--accent);
-}
-.meta{ text-align:right; min-width:0 }
-.meta .name{font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-.meta .sub{color:var(--muted); font-size:13px; margin-top:4px}
+  label{display:block;margin-bottom:8px;color:var(--muted);font-size:13px}
+  input[type="text"], input[type="url"], select{
+    width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+    background:transparent;color:inherit;font-size:15px;
+  }
 
-/* progress */
-.progress-wrap{width:320px; max-width:40vw; min-width:180px; margin-left:8px}
-.progress{height:12px;background:rgba(255,255,255,0.03);border-radius:8px;overflow:hidden;display:block}
-.progress > i{display:block;height:100%;width:0%; background:linear-gradient(90deg,var(--accent),#ff8653); transition:width 220ms linear}
-.status{font-size:13px;color:var(--muted); margin-top:8px; display:flex; gap:8px; align-items:center; justify-content:space-between}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .btn{
+    background:var(--accent);color:#fff;border:none;padding:12px 16px;border-radius:10px;
+    cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(255,60,60,0.08);
+  }
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+  .btn.danger{background:var(--danger)}
+  .btn.small{padding:8px 10px;font-size:14px;border-radius:8px}
 
-/* actions */
-.actions{display:flex;gap:8px;align-items:center}
-.small-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:6px 8px;border-radius:8px;color:#fff;cursor:pointer}
+  .hint{color:var(--muted);font-size:13px;margin-top:10px}
 
-/* completed */
-.done{color:var(--success); font-weight:700}
+  /* قائمة التنزيلات */
+  .task{
+    display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .task .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .task .meta{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:13px}
+  .progress{
+    height:12px;background:rgba(255,255,255,0.04);border-radius:10px;overflow:hidden;margin-top:8px;
+  }
+  .progress > span{
+    display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#ff704d);
+    transition:width .25s linear;
+  }
+  .status{font-size:13px;color:var(--muted)}
 
-/* responsive */
-@media(max-width:720px){
-  .header{flex-direction:column;align-items:stretch;text-align:center}
-  .controls{justify-content:center}
-  .progress-wrap{max-width:60vw}
-}
+  /* سجل التنزيلات */
+  .history-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px;border-radius:10px;}
+  .pill{background:var(--glass);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:13px;}
+
+  @media(min-width:800px){
+    .grid{grid-template-columns: 1fr 360px}
+  }
 </style>
 </head>
 <body>
-  <div class="app" role="main">
-    <div class="header">
-      <div class="brand">
-        <div class="logo">🔥</div>
-        <div class="title">
-          <h1>OtakuNova</h1>
-          <p>قارئ مانغا ذكي — مدير التحميلات التجريبي</p>
-        </div>
-      </div>
 
-      <div style="text-align:left">
-        <button id="clearAll" class="btn ghost small">مسح الكل</button>
-      </div>
-    </div>
-
-    <!-- controls -->
-    <div class="controls" role="region" aria-label="أدوات الإضافة">
-      <input id="fileName" class="input" placeholder="اسم الملف (مثال: chapter-1.zip)" aria-label="اسم الملف">
-      <input id="fileSize" class="input-small" placeholder="حجم (MB)" aria-label="حجم الملف">
-      <button id="addBtn" class="btn">أضف وتنزيل</button>
-    </div>
-
-    <!-- downloads list -->
-    <div id="downloads" class="list" aria-live="polite"></div>
-
-    <div style="margin-top:12px;color:var(--muted);font-size:13px">
-      ملفات محفوظة محليًا في متصفحك — <strong>ليس نشرًا على الإنترنت</strong>.
-    </div>
+<header>
+  <div class="logo">🔥</div>
+  <div>
+    <h1>OtakuNova</h1>
+    <p>قارئ مانغا ذكي — محاكاة تنزيلات وتجريب GitHub Pages</p>
   </div>
+</header>
+
+<main>
+  <div class="grid">
+
+    <!-- العمود الرئيسي -->
+    <section class="card">
+      <h2 style="margin:0 0 8px 0">إنشاء مهمة تنزيل</h2>
+
+      <label>اسم الملف (مثال: OtakuNova-chapter-1.zip)</label>
+      <input id="fileName" type="text" placeholder="اكتب اسم الملف هنا" value="OtakuNova-chapter-1.zip"/>
+
+      <label style="margin-top:12px">رابط التحميل (اختياري — اتركه فارغًا للمحاكاة)</label>
+      <input id="fileUrl" type="url" placeholder="https://example.com/file.zip"/>
+
+      <div class="row" style="margin-top:12px">
+        <select id="sizeHint" style="padding:12px;border-radius:10px">
+          <option value="5">حجم تقريبي — 5 MB (خفيف)</option>
+          <option value="20" selected>حجم تقريبي — 20 MB (متوسط)</option>
+          <option value="80">حجم تقريبي — 80 MB (كبير)</option>
+        </select>
+
+        <button class="btn" id="addBtn">إضافة إلى قائمة التنزيل</button>
+        <button class="btn ghost" id="startQueueBtn">بدء/متابعة الطابور</button>
+        <button class="btn ghost" id="clearQueueBtn">مسح القائمة</button>
+      </div>
+
+      <p class="hint">إذا لم تضف رابطًا، سيُجرى تنزيل محاكاة (تقدّم زمني). يمكن إضافة روابط فعلية إن كانت متاحة على نفس المصدر.</p>
+
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:16px 0">
+
+      <h3 style="margin:0 0 8px 0">قائمة التنزيلات</h3>
+      <div id="queueList" style="display:flex;flex-direction:column;gap:10px"></div>
+
+    </section>
+
+    <!-- الشريط الجانبي (سجل) -->
+    <aside class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">سجل التنزيلات المكتملة</h3>
+        <div class="pill" id="countPill">0</div>
+      </div>
+
+      <div id="history" style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <div class="hint">لا توجد تنزيلات حتى الآن.</div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:8px">
+        <button class="btn small" id="exportJson">تصدير السجل (JSON)</button>
+        <button class="btn small ghost" id="clearHistory">مسح السجل</button>
+      </div>
+
+      <p class="hint" style="margin-top:12px">السجل محفوظ محليًا في متصفحك (localStorage). سيتم عرضه حتى إن لم تُحمّل ملفات فعليًا.</p>
+    </aside>
+
+  </div>
+</main>
 
 <script>
 /*
-  مدير تنزيلات محلي (محاكاة)
-  - يحفظ الحالة في localStorage
-  - إيقاف/استئناف/إلغاء
-  - شريط تقدم مع تقدير الحجم
+  OtakuNova — Download Queue (vanilla JS)
+  - قائمة انتظار في الذاكرة
+  - تنزيل فعلي عبر fetch->blob إن كان الرابط يدعم CORS
+  - محاكاة تقدم إذا لم يوجد رابط أو فشل تنزيل
+  - سجل محلي محفوظ في localStorage
 */
 
-const LS_KEY = 'otakunova_downloads_v1';
+const qListEl = document.getElementById('queueList');
+const historyEl = document.getElementById('history');
+const countPill = document.getElementById('countPill');
 
-function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+let queue = []; // عناصر: {id,name,url,size,progress,status}
+let history = JSON.parse(localStorage.getItem('otakunova_history')||'[]');
 
-// Load saved
-let state = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+function saveHistory(){ localStorage.setItem('otakunova_history', JSON.stringify(history)); renderHistory(); }
 
-// download engine (simulated)
-class DownloadItem {
-  constructor({id,name,size,progress=0,status='idle'}) {
-    this.id = id || uid();
-    this.name = name || 'file';
-    this.size = Number(size)|| 5; // MB
-    this.progress = progress; // 0..100
-    this.status = status; // idle, running, paused, done, canceled
-    this._interval = null;
-    this.speed = this._randSpeed();
-  }
-
-  _randSpeed(){
-    // speed: percent per second (varies by size so larger files take longer)
-    return (Math.random() * 8) + (this.size > 50 ? 0.5 : 1.2);
-  }
-
-  start(onUpdate,onComplete){
-    if(this.status === 'done' || this.status === 'running') return;
-    this.status = 'running';
-    this.speed = this._randSpeed();
-    const stepMs = 250;
-    this._interval = setInterval(()=>{
-      // variable increment to feel realistic
-      let delta = (this.speed * stepMs) / 1000;
-      // add small randomness
-      delta *= (0.6 + Math.random()*0.9);
-      this.progress = Math.min(100, this.progress + delta);
-      if(onUpdate) onUpdate(this);
-      if(this.progress >= 100){
-        this.complete(onComplete);
-      }
-    }, stepMs);
-  }
-
-  pause(onUpdate){
-    if(this._interval) clearInterval(this._interval);
-    this._interval = null;
-    if(this.status === 'running') this.status = 'paused';
-    if(onUpdate) onUpdate(this);
-  }
-
-  cancel(onUpdate){
-    if(this._interval) clearInterval(this._interval);
-    this._interval = null;
-    this.status = 'canceled';
-    this.progress = 0;
-    if(onUpdate) onUpdate(this);
-  }
-
-  complete(onComplete){
-    if(this._interval) clearInterval(this._interval);
-    this._interval = null;
-    this.status = 'done';
-    this.progress = 100;
-    if(onComplete) onComplete(this);
-  }
-}
-
-// app data
-let downloads = state.map(d=> new DownloadItem(d));
-
-// save function
-function saveState(){
-  const payload = downloads.map(d=> ({
-    id:d.id, name:d.name, size:d.size, progress: Math.round(d.progress*100)/100, status:d.status
-  }));
-  localStorage.setItem(LS_KEY, JSON.stringify(payload));
-}
-
-// rendering
-const listEl = document.getElementById('downloads');
-
-function formatSize(mb){
-  if(mb >= 1024) return (mb/1024).toFixed(2) + ' GB';
-  return mb + ' MB';
-}
-
-function render(){
-  listEl.innerHTML = '';
-  if(downloads.length === 0){
-    const p = document.createElement('div');
-    p.style.color = 'var(--muted)';
-    p.style.padding = '24px';
-    p.style.border = '1px dashed rgba(255,255,255,0.03)';
-    p.style.borderRadius = '12px';
-    p.textContent = 'لا توجد تنزيلات — أضف ملفًا بالاسم والحجم ثم اضغط "أضف وتنزيل".';
-    listEl.appendChild(p);
+function renderHistory(){
+  historyEl.innerHTML = '';
+  if(!history.length){
+    historyEl.innerHTML = '<div class="hint">لا توجد تنزيلات مكتملة بعد.</div>';
+    countPill.innerText = '0';
     return;
   }
-
-  downloads.forEach(item=>{
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.id = 'dl-'+item.id;
-
-    // left
-    const left = document.createElement('div'); left.className='left';
-    const ico = document.createElement('div'); ico.className='file-ico'; ico.textContent = '📦';
-    const meta = document.createElement('div'); meta.className='meta';
-    const name = document.createElement('div'); name.className='name'; name.title = item.name;
-    name.textContent = item.name;
-    const sub = document.createElement('div'); sub.className='sub';
-    sub.textContent = formatSize(item.size) + ' • ' + (item.status==='done' ? 'مكتمل' : item.status);
-    meta.appendChild(name); meta.appendChild(sub);
-    left.appendChild(ico); left.appendChild(meta);
-
-    // progress
-    const right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='12px';
-    const progWrap = document.createElement('div'); progWrap.className='progress-wrap';
-    const prog = document.createElement('div'); prog.className='progress'; const inner = document.createElement('i');
-    inner.style.width = item.progress + '%';
-    prog.appendChild(inner);
-    const statusLine = document.createElement('div'); statusLine.className='status';
-    const perc = document.createElement('div'); perc.textContent = Math.round(item.progress) + '%';
-    const statText = document.createElement('div'); statText.style.color='var(--muted)'; statText.style.fontSize='13px';
-    statText.textContent = item.status === 'done' ? '✅ تم التحميل' : item.status === 'canceled' ? 'ملغى' : item.status;
-    statusLine.appendChild(statText); statusLine.appendChild(perc);
-    progWrap.appendChild(prog); progWrap.appendChild(statusLine);
-
-    // actions
-    const actions = document.createElement('div'); actions.className='actions';
-    // start/pause/resume button
-    const startBtn = document.createElement('button'); startBtn.className='small-btn';
-    if(item.status === 'running') startBtn.textContent = 'إيقاف';
-    else if(item.status === 'done') startBtn.textContent = 'مفتوح';
-    else startBtn.textContent = 'تشغيل';
-
-    // cancel button
-    const cancelBtn = document.createElement('button'); cancelBtn.className='small-btn';
-    cancelBtn.textContent = 'إلغاء';
-
-    // remove button
-    const removeBtn = document.createElement('button'); removeBtn.className='small-btn';
-    removeBtn.textContent = 'حذف';
-
-    // open / show
-    const openBtn = document.createElement('button'); openBtn.className='small-btn';
-    openBtn.textContent = item.status === 'done' ? 'فتح' : 'معلومات';
-
-    actions.appendChild(startBtn);
-    actions.appendChild(cancelBtn);
-    actions.appendChild(removeBtn);
-    actions.appendChild(openBtn);
-
-    right.appendChild(progWrap); right.appendChild(actions);
-
-    card.appendChild(left); card.appendChild(right);
-    listEl.appendChild(card);
-
-    // handlers
-    function updateView(it){
-      inner.style.width = it.progress + '%';
-      perc.textContent = Math.round(it.progress) + '%';
-      statText.textContent = it.status === 'done' ? '✅ تم التحميل' : it.status === 'canceled' ? 'ملغى' : it.status;
-      if(it.status === 'running') startBtn.textContent = 'إيقاف';
-      else if(it.status === 'paused') startBtn.textContent = 'استئناف';
-      else if(it.status === 'done') startBtn.textContent = 'مفتوح';
-      else startBtn.textContent = 'تشغيل';
-      // dim buttons if canceled/done
-      cancelBtn.disabled = (it.status === 'canceled' || it.status === 'done');
-    }
-
-    startBtn.addEventListener('click', ()=>{
-      if(item.status === 'running'){
-        item.pause(updateAndSave);
-      } else if(item.status === 'paused' || item.status === 'idle'){
-        item.start(updateAndSave, completeAndSave);
-      } else if(item.status === 'done'){
-        alert('الملف مفتوح (محاكاة). اسم الملف: ' + item.name);
-      } else {
-        // if canceled -> restart from 0
-        item.progress = 0;
-        item.status = 'idle';
-        item.start(updateAndSave, completeAndSave);
-      }
-      updateView(item);
-      saveState();
-    });
-
-    cancelBtn.addEventListener('click', ()=>{
-      if(confirm('هل تريد إلغاء هذا التنزيل؟')){
-        item.cancel(updateAndSave);
-        updateView(item);
-        saveState();
-      }
-    });
-
-    removeBtn.addEventListener('click', ()=>{
-      if(confirm('حذف العنصر نهائيًا؟')){
-        // stop interval and remove from array
-        item.cancel();
-        downloads = downloads.filter(d => d.id !== item.id);
-        saveState();
-        render();
-      }
-    });
-
-    openBtn.addEventListener('click', ()=>{
-      if(item.status === 'done'){
-        alert('فتح الملف (محاكاة): ' + item.name);
-      } else {
-        alert('معلومات: ' + item.name + '\\nالحجم: ' + formatSize(item.size) + '\\nالتقدم: ' + Math.round(item.progress) + '%\\nالحالة: ' + item.status);
-      }
-    });
-
-    // reflect initial state
-    updateView(item);
+  countPill.innerText = history.length;
+  history.slice().reverse().forEach(h=>{
+    const el = document.createElement('div');
+    el.className = 'history-item';
+    el.innerHTML = `<div>
+      <div style="font-weight:600">${h.name}</div>
+      <div class="status">${new Date(h.time).toLocaleString()}</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="pill">${h.sizeDisplay||'–'}</div>
+      <a class="btn small ghost" href="${h.url || '#'}" ${h.url ? 'target="_blank"':'onclick="return false"'}>فتح</a>
+    </div>`;
+    historyEl.appendChild(el);
   });
 }
 
-// helper to update single item view and save
-function updateAndSave(it){
-  // do UI update for that card
-  const card = document.getElementById('dl-'+it.id);
-  if(card){
-    const inner = card.querySelector('.progress > i');
-    const perc = card.querySelector('.status div:last-child');
-    const statText = card.querySelector('.status div:first-child');
-    inner.style.width = it.progress + '%';
-    perc.textContent = Math.round(it.progress) + '%';
-    statText.textContent = it.status === 'done' ? '✅ تم التحميل' : it.status;
+function renderQueue(){
+  qListEl.innerHTML = '';
+  if(!queue.length){
+    qListEl.innerHTML = '<div class="hint">لا توجد مهام. أضف ملفًا للبدء.</div>'; return;
   }
-  saveState();
-}
+  queue.forEach(task=>{
+    const node = document.createElement('div');
+    node.className = 'task';
+    node.id = 'task-'+task.id;
+    node.innerHTML = `
+      <div class="top">
+        <div>
+          <div style="font-weight:700">${task.name}</div>
+          <div class="meta">${task.url? 'رابط' : 'محاكاة'} • ${task.sizeDisplay}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn small ghost" data-action="pause">${task.status==='running'?'إيقاف':'تشغيل'}</button>
+          <button class="btn small ghost" data-action="remove">حذف</button>
+        </div>
+      </div>
+      <div class="progress"><span style="width:${task.progress}%"></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="status">${task.statusText || 'جاري الانتظار'}</div>
+        <div class="status">${Math.round(task.progress)}%</div>
+      </div>
+    `;
+    qListEl.appendChild(node);
 
-function completeAndSave(it){
-  updateAndSave(it);
-  // small celebration
-  try{
-    const card = document.getElementById('dl-'+it.id);
-    if(card){
-      card.style.boxShadow = '0 10px 30px rgba(46,204,113,0.06)';
-    }
-  }catch(e){}
-  saveState();
-}
-
-// controls binding
-document.getElementById('addBtn').addEventListener('click', ()=>{
-  const name = document.getElementById('fileName').value.trim() || ('file-' + (downloads.length+1));
-  const sizeVal = Number(document.getElementById('fileSize').value) || (Math.floor(Math.random()*80)+2);
-  const item = new DownloadItem({name, size:sizeVal});
-  downloads.unshift(item);
-  saveState();
-  render();
-  // start immediately
-  item.start(updateAndSave, completeAndSave);
-});
-
-// clear all
-document.getElementById('clearAll').addEventListener('click', ()=>{
-  if(confirm('هل تريد مسح كل التنزيلات وحالتها المحفوظة؟')){
-    downloads.forEach(d => d.cancel());
-    downloads = [];
-    saveState();
-    render();
-  }
-});
-
-// restore running items on load (do not auto-start completed)
-function resumeRunning(){
-  downloads.forEach(d=>{
-    if(d.status === 'running'){
-      d.start(updateAndSave, completeAndSave);
-    }
+    // أزرار
+    node.querySelector('[data-action="remove"]').onclick = ()=>{
+      queue = queue.filter(t=>t.id!==task.id);
+      renderQueue();
+    };
+    node.querySelector('[data-action="pause"]').onclick = ()=>{
+      if(task.status === 'running'){ task._pause = true; task.status='paused'; task.statusText='متوقّف مؤقتًا'; }
+      else { task._pause = false; task.status='queued'; task.statusText='مستعد'; }
+      renderQueue();
+      if(!isProcessing) processQueue();
+    };
   });
 }
 
-// initial render
-render();
-resumeRunning();
+// إنشاء مهمة جديدة
+function addTask(name,url,sizeMB){
+  const id = Date.now() + Math.floor(Math.random()*999);
+  const task = {
+    id,name,url,size:sizeMB||20,
+    sizeDisplay: (sizeMB? sizeMB + ' MB' : '–'),
+    progress: 0,status:'queued',statusText:'قيد الانتظار',
+    _pause:false,_controller:null
+  };
+  queue.push(task);
+  renderQueue();
+}
 
-// autosave periodically
-setInterval(saveState, 5000);
+// معالجة الطابور
+let isProcessing = false;
+async function processQueue(){
+  if(isProcessing) return;
+  isProcessing = true;
+  while(queue.length){
+    const task = queue[0];
+    if(task._pause){ await sleep(500); continue; }
+    // بدء
+    task.status = 'running'; task.statusText = 'جارٍ التحميل'; renderQueue();
 
-// keyboard: Enter in fileSize triggers add
-document.getElementById('fileSize').addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter') document.getElementById('addBtn').click();
-});
+    // حاول تنزيل فعليًا إن وُجد رابط
+    let succeeded = false;
+    if(task.url){
+      try{
+        // دعم إمكانية إيقاف fetch عبر AbortController
+        const controller = new AbortController();
+        task._controller = controller;
+        // نجرب التحميل عبر fetch لكن نعرض تقدم زائف لأن fetch لا يعطي تقدم بسهولة بدون read() loops
+        const res = await fetch(task.url, {signal: controller.signal});
+        if(!res.ok) throw new Error('لم يستجب السيرفر');
+        const reader = res.body && res.body.getReader ? res.body.getReader() : null;
+        if(reader){
+          // قراءة واحتساب التقدم الحقيقي
+          const contentLength = +res.headers.get('Content-Length') || (task.size*1024*1024);
+          let received = 0;
+          const chunks = [];
+          while(true){
+            if(task._pause){ controller.abort(); break; }
+            const {done, value} = await reader.read();
+            if(done) break;
+            chunks.push(value); received += value.length;
+            task.progress = Math.min(99, (received / contentLength) * 100);
+            renderQueue();
+          }
+          // جمع البلووب وتنزيله
+          const blob = new Blob(chunks);
+          const urlBlob = URL.createObjectURL(blob);
+          triggerDL(urlBlob, task.name);
+          URL.revokeObjectURL(urlBlob);
+          succeeded = true;
+        } else {
+          // لا يدعم reader: نفّذ تنزيل عبر تحويل إلى blob مباشرة
+          const blob = await res.blob();
+          const urlBlob = URL.createObjectURL(blob);
+          triggerDL(urlBlob, task.name);
+          URL.revokeObjectURL(urlBlob);
+          succeeded = true;
+        }
+      }catch(err){
+        console.warn('download error', err);
+        // سقط إلى المحاكاة
+        succeeded = false;
+      }
+    }
 
-// nice: when page unload, pause intervals (to avoid errors)
-window.addEventListener('beforeunload', ()=>{
-  downloads.forEach(d => d.pause());
-  saveState();
-});
+    // لو لم ينجح أو لم يوجد رابط -> محاكاة تقدم
+    if(!succeeded){
+      await simulateProgress(task);
+    }
+
+    // تأكيد الإنهاء
+    task.progress = 100; task.status='done'; task.statusText='تم التحميل';
+    // انسخه لمنطقة السجل
+    history.push({name:task.name, url:task.url||'', time:Date.now(), sizeDisplay:task.sizeDisplay});
+    saveHistory();
+    // أزل من القوائم
+    queue.shift();
+    renderQueue();
+    // انتظر لحظة قبل المهمة التالية
+    await sleep(600);
+  }
+  isProcessing = false;
+}
+
+// مساعدة: محاكاة التقدّم
+function simulateProgress(task){
+  return new Promise(resolve=>{
+    const steps = Math.max(6, Math.floor((task.size||20)/5));
+    let i=0;
+    const t = setInterval(()=>{
+      if(task._pause){ clearInterval(t); resolve(); return; }
+      i++;
+      task.progress = Math.min(99, task.progress + (100/steps));
+      renderQueue();
+      if(i>=steps){
+        clearInterval(t); resolve();
+      }
+    }, 350 + Math.random()*300);
+  });
+}
+
+function triggerDL(href, filename){
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = filename || '';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+// أدوات
+function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+// عناصر التحكم DOM
+document.getElementById('addBtn').onclick = ()=>{
+  const name = document.getElementById('fileName').value.trim() || ('file-' + Date.now() + '.zip');
+  const url = document.getElementById('fileUrl').value.trim();
+  const size = parseInt(document.getElementById('sizeHint').value) || 20;
+  addTask(name,url||'',size);
+  renderQueue();
+};
+
+document.getElementById('startQueueBtn').onclick = ()=>{ processQueue(); };
+document.getElementById('clearQueueBtn').onclick = ()=>{ if(confirm('مسح قائمة الانتظار؟')){ queue=[]; renderQueue(); } };
+
+document.getElementById('exportJson').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(history, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  triggerDL(url, 'otakunova_history.json');
+  URL.revokeObjectURL(url);
+};
+document.getElementById('clearHistory').onclick = ()=>{ if(confirm('مسح سجل التنزيلات؟')){ history=[]; saveHistory(); } };
+
+// عند التحميل: عرض السجل
+renderHistory();
+renderQueue();
+
+// إذا كان هناك عناصر تلقائية (مثال) أضفها:
+if(!localStorage.getItem('otakunova_demo_seeded')){
+  // demo small
+  addTask('OtakuNova-chapter-1.zip','',20);
+  addTask('sample-manual.zip','',5);
+  localStorage.setItem('otakunova_demo_seeded','1');
+  renderQueue();
+}
 </script>
 </body>
 </html>
