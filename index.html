@@ -1,92 +1,18 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OtakuNova</title>
-
-<style>
-body {
-    background: #0d0d0d;
-    color: white;
-    font-family: Arial;
-    text-align: center;
-    margin: 0;
-}
-
-.container {
-    margin-top: 100px;
-}
-
-h1 {
-    color: #ff3c3c;
-    font-size: 40px;
-}
-
-button {
-    background: #ff3c3c;
-    border: none;
-    padding: 15px 25px;
-    color: white;
-    font-size: 18px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #ff0000;
-}
-
-#downloads {
-    margin-top: 30px;
-}
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
-
 <body>
-
-<div class="container">
-    <h1>🔥 OtakuNova</h1>
-    <p>قارئ مانغا ذكي قيد التطوير</p>
-
-    <button onclick="startDownload()">تحميل</button>
-
-    <div id="downloads"></div>
-</div>
-
-<script>
-function startDownload() {
-    let div = document.getElementById("downloads");
-
-    let container = document.createElement("div");
-    container.style.marginTop = "10px";
-
-    let text = document.createElement("p");
-    text.innerText = "⬇️ جاري التحميل...";
-
-    let progress = document.createElement("progress");
-    progress.value = 0;
-    progress.max = 100;
-    progress.style.width = "200px";
-
-    container.appendChild(text);
-    container.appendChild(progress);
-    div.appendChild(container);
-
-    let value = 0;
-
-    let interval = setInterval(() => {
-        value += 10;
-        progress.value = value;
-
-        if (value >= 100) {
-            clearInterval(interval);
-            text.innerText = "✅ تم التحميل بنجاح";
-        }
-    }, 300);
-}
-</script>
-
+    <script>
+        let container = document.createElement('div');
+        // Other script content
+        container.style.marginTop = "15px";
+        container.style.padding = "10px";
+        container.style.border = "1px solid #333";
+        container.style.borderRadius = "10px";
+    </script>
 </body>
 </html>
