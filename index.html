@@ -1,17 +1,74 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>OtakuNova</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OtakuNova</title>
+
+<style>
+body {
+    background: #0d0d0d;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    margin: 0;
+}
+
+.container {
+    margin-top: 100px;
+}
+
+h1 {
+    color: #ff3c3c;
+    font-size: 40px;
+}
+
+button {
+    background: #ff3c3c;
+    border: none;
+    padding: 15px 25px;
+    color: white;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff0000;
+}
+
+#downloads {
+    margin-top: 30px;
+}
+</style>
+
 </head>
-<body style="background:black; color:white; text-align:center; font-family:sans-serif;">
 
-  <h1>🔥 OtakuNova</h1>
-  <p>قارئ مانغا ذكي قيد التطوير</p>
+<body>
 
-<button onclick="alert('Nova is coming 😏')">
-  اضغط هنا
-</button>
+<div class="container">
+    <h1>🔥 OtakuNova</h1>
+    <p>قارئ مانغا ذكي قيد التطوير</p>
+
+    <button onclick="startDownload()">تحميل</button>
+
+    <div id="downloads"></div>
+</div>
+
+<script>
+function startDownload() {
+    let div = document.getElementById("downloads");
+
+    let item = document.createElement("p");
+    item.innerText = "⬇️ جاري التحميل...";
+    
+    div.appendChild(item);
+
+    setTimeout(() => {
+        item.innerText = "✅ تم التحميل بنجاح";
+    }, 2000);
+}
+</script>
 
 </body>
 </html>
