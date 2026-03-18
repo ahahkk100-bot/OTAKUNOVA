@@ -3,388 +3,490 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>OtakuNova — مدير التحميل</title>
+<title>OtakuNova — Download Manager</title>
+
 <style>
-  :root{
-    --bg:#0d0d0d;
-    --card:#111;
-    --accent:#ff3c3c;
-    --muted:#999;
-    --glass: rgba(255,255,255,0.03);
-    --success:#3fcf7f;
-  }
-  html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Tahoma, Arial; background:var(--bg); color:#fff;}
-  .wrap{max-width:900px;margin:20px auto;padding:20px;box-sizing:border-box;}
-  header{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:space-between}
-  .brand{display:flex;gap:12px;align-items:center}
-  .logo{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#ff7b7b,#ff3c3c);display:flex;align-items:center;justify-content:center;font-size:26px}
-  h1{margin:0;font-size:20px}
-  p.lead{margin:0;color:var(--muted)}
-  .panel{background:var(--card);border-radius:12px;padding:14px;margin-top:16px;box-shadow:0 4px 18px rgba(0,0,0,0.6)}
-  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  input[type="text"]{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:#fff}
-  .btn{background:var(--accent);border:none;padding:10px 14px;border-radius:8px;color:#fff;cursor:pointer;font-weight:600}
-  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
-  .btn.small{padding:6px 10px;font-size:14px;border-radius:6px}
-  .queue{margin-top:12px;display:grid;gap:10px}
-  .item{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);border:1px solid rgba(255,255,255,0.02)}
-  .info{flex:1;min-width:0}
-  .meta{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px}
-  progress{width:100%;height:12px;border-radius:8px;overflow:hidden;appearance:none}
-  progress::-webkit-progress-bar{background:rgba(255,255,255,0.03)}
-  progress::-webkit-progress-value{background:linear-gradient(90deg,var(--accent),#ff7a7a)}
-  .actions{display:flex;gap:6px}
-  .tag{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:8px;font-size:13px}
-  .history{margin-top:18px;display:flex;flex-direction:column;gap:8px}
-  .note{color:var(--muted);font-size:13px}
-  .center{text-align:center}
-  footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
-  /* responsive */
-  @media(min-width:720px){
-    header{padding:8px 0}
-    h1{font-size:22px}
-  }
-  /* accessibility focus */
-  .btn:focus, input:focus, .small-btn:focus {outline:3px solid rgba(255,60,60,0.18);outline-offset:2px}
+:root{
+  --bg:#0d0d0f;
+  --panel:#111214;
+  --accent:#ff3c3c;
+  --muted:#9aa0a6;
+  --glass: rgba(255,255,255,0.03);
+  --success: #2ecc71;
+  --danger:#e74c3c;
+  --card-radius:14px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg,#070708 0%, #0d0d0f 100%);
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:20px;
+  text-align:center;
+}
+
+/* container */
+.app{
+  max-width:900px;
+  margin:18px auto;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  border-radius:var(--card-radius);
+  padding:18px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+  border:1px solid rgba(255,255,255,0.03);
+}
+
+/* header */
+.header{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.logo{
+  width:56px;
+  height:56px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#ff6b6b,#ff3c3c);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:22px;
+  box-shadow: 0 6px 20px rgba(255,60,60,0.08);
+}
+.title{
+  text-align:right;
+}
+.title h1{margin:0;font-size:20px}
+.title p{margin:0;color:var(--muted);font-size:13px}
+
+/* controls */
+.controls{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.input, .input-small{
+  background:var(--panel);
+  border-radius:10px;
+  padding:10px 12px;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.03);
+  outline:none;
+}
+.input{flex:1; min-width:180px;}
+.input-small{width:130px}
+.btn{
+  background:var(--accent);
+  border:none;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow: 0 6px 18px rgba(255,60,60,0.08);
+}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04)}
+.btn.small{padding:8px 10px;font-size:14px}
+
+/* downloads list */
+.list{
+  margin-top:12px;
+  display:grid;
+  gap:12px;
+}
+.card{
+  background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.02));
+  border-radius:12px;
+  padding:12px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.left{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  min-width:0;
+}
+.file-ico{
+  width:56px;height:56px;border-radius:10px;background:rgba(255,255,255,0.03);
+  display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--accent);
+}
+.meta{ text-align:right; min-width:0 }
+.meta .name{font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.meta .sub{color:var(--muted); font-size:13px; margin-top:4px}
+
+/* progress */
+.progress-wrap{width:320px; max-width:40vw; min-width:180px; margin-left:8px}
+.progress{height:12px;background:rgba(255,255,255,0.03);border-radius:8px;overflow:hidden;display:block}
+.progress > i{display:block;height:100%;width:0%; background:linear-gradient(90deg,var(--accent),#ff8653); transition:width 220ms linear}
+.status{font-size:13px;color:var(--muted); margin-top:8px; display:flex; gap:8px; align-items:center; justify-content:space-between}
+
+/* actions */
+.actions{display:flex;gap:8px;align-items:center}
+.small-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:6px 8px;border-radius:8px;color:#fff;cursor:pointer}
+
+/* completed */
+.done{color:var(--success); font-weight:700}
+
+/* responsive */
+@media(max-width:720px){
+  .header{flex-direction:column;align-items:stretch;text-align:center}
+  .controls{justify-content:center}
+  .progress-wrap{max-width:60vw}
+}
 </style>
 </head>
 <body>
-<div class="wrap" role="main">
-  <header>
-    <div class="brand">
-      <div class="logo" aria-hidden>🔥</div>
-      <div>
-        <h1>OtakuNova</h1>
-        <p class="lead">قارئ مانغا ذكي — صفحة عرض تجريبية ومدير تنزيلات محاكى</p>
+  <div class="app" role="main">
+    <div class="header">
+      <div class="brand">
+        <div class="logo">🔥</div>
+        <div class="title">
+          <h1>OtakuNova</h1>
+          <p>قارئ مانغا ذكي — مدير التحميلات التجريبي</p>
+        </div>
+      </div>
+
+      <div style="text-align:left">
+        <button id="clearAll" class="btn ghost small">مسح الكل</button>
       </div>
     </div>
 
-    <div class="tag" id="statusTag" aria-live="polite">جاهز • التخزين محلي</div>
-  </header>
-
-  <section class="panel" aria-labelledby="uploaderTitle">
-    <h2 id="uploaderTitle" style="margin:0 0 8px 0">إنشاء مهمة تنزيل</h2>
-
-    <div class="controls" role="form" aria-label="Controls">
-      <input id="fileName" type="text" placeholder="اسم الملف (مثال: chapter1.zip)" aria-label="اسم الملف" value="OtakuNova-chapter-1.zip">
-      <select id="sizeSelect" aria-label="حجم الملف" style="padding:10px;border-radius:8px;background:var(--glass);color:#fff;border:1px solid rgba(255,255,255,0.03)">
-        <option value="1">خ صغير — 1 MB</option>
-        <option value="5" selected>خ متوسط — 5 MB</option>
-        <option value="20">خ كبير — 20 MB</option>
-        <option value="100">خ ضخم — 100 MB</option>
-      </select>
-
-      <button id="addBtn" class="btn">إضافة إلى قائمة التحميل</button>
-      <button id="clearComplete" class="btn ghost small">مسح المكتمل</button>
+    <!-- controls -->
+    <div class="controls" role="region" aria-label="أدوات الإضافة">
+      <input id="fileName" class="input" placeholder="اسم الملف (مثال: chapter-1.zip)" aria-label="اسم الملف">
+      <input id="fileSize" class="input-small" placeholder="حجم (MB)" aria-label="حجم الملف">
+      <button id="addBtn" class="btn">أضف وتنزيل</button>
     </div>
 
-    <div class="note" style="margin-top:10px">
-      هذه صفحة ثابتة تحاكي التنزيلات داخلياً. يمكنك إضافة عناصر، إيقاف/استئناف، وإلغاء. ستُحفظ العناصر المكتملة في متصفحك.
-    </div>
+    <!-- downloads list -->
+    <div id="downloads" class="list" aria-live="polite"></div>
 
-    <div class="queue" id="queue" aria-live="polite" style="margin-top:12px">
-      <!-- عناصر التنزيل ستظهر هنا -->
+    <div style="margin-top:12px;color:var(--muted);font-size:13px">
+      ملفات محفوظة محليًا في متصفحك — <strong>ليس نشرًا على الإنترنت</strong>.
     </div>
-  </section>
-
-  <section class="panel history" aria-labelledby="historyTitle">
-    <h3 id="historyTitle" style="margin:0">سجل التنزيلات المكتملة</h3>
-    <div id="historyList" style="margin-top:8px"></div>
-    <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
-      <button id="exportBtn" class="btn small">تصدير السجل (JSON)</button>
-      <button id="clearHistory" class="btn ghost small">مسح السجل</button>
-      <div style="flex:1"></div>
-      <div class="note">الملفات الحقيقية لا تُحمّل هنا — مجرد محاكاة للعرض</div>
-    </div>
-  </section>
-
-  <footer>
-    تم الإنشاء بواسطة OtakuNova • تجربة GitHub Pages
-  </footer>
-</div>
+  </div>
 
 <script>
 /*
-  محرك التنزيل (محاكاة):
-  - يدعم قائمة انتظار، عدد متزامن افتراضي 3
-  - يدعم إيقاف/استئناف/إلغاء
-  - يخزن المكتملين في localStorage
+  مدير تنزيلات محلي (محاكاة)
+  - يحفظ الحالة في localStorage
+  - إيقاف/استئناف/إلغاء
+  - شريط تقدم مع تقدير الحجم
 */
 
-(function(){
-  // عناصر DOM
-  const addBtn = document.getElementById('addBtn');
-  const queueEl = document.getElementById('queue');
-  const fileNameInput = document.getElementById('fileName');
-  const sizeSelect = document.getElementById('sizeSelect');
-  const historyList = document.getElementById('historyList');
-  const exportBtn = document.getElementById('exportBtn');
-  const clearHistory = document.getElementById('clearHistory');
-  const clearComplete = document.getElementById('clearComplete');
-  const statusTag = document.getElementById('statusTag');
+const LS_KEY = 'otakunova_downloads_v1';
 
-  // حالة
-  let downloads = []; // عناصر حالية في الذاكرة
-  const completedKey = 'otakunova_downloads_v1';
-  const concurrency = 3;
-  let running = 0;
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
-  // تحميل السجل من localStorage
-  function loadHistory(){
-    const raw = localStorage.getItem(completedKey);
-    try{
-      return raw ? JSON.parse(raw) : [];
-    }catch(e){
-      return [];
-    }
-  }
-  function saveHistory(arr){
-    localStorage.setItem(completedKey, JSON.stringify(arr));
+// Load saved
+let state = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+
+// download engine (simulated)
+class DownloadItem {
+  constructor({id,name,size,progress=0,status='idle'}) {
+    this.id = id || uid();
+    this.name = name || 'file';
+    this.size = Number(size)|| 5; // MB
+    this.progress = progress; // 0..100
+    this.status = status; // idle, running, paused, done, canceled
+    this._interval = null;
+    this.speed = this._randSpeed();
   }
 
-  // عرض السجل
-  function renderHistory(){
-    const items = loadHistory();
-    if(!items.length){
-      historyList.innerHTML = '<div class="note">لا يوجد تنزيلات مكتملة بعد.</div>';
-      return;
-    }
-    historyList.innerHTML = '';
-    items.slice().reverse().forEach(it=>{
-      const row = document.createElement('div');
-      row.className = 'item';
-      row.style.alignItems = 'center';
-      row.innerHTML = `
-        <div class="info" style="min-width:0">
-          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
-            <div style="min-width:0">
-              <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(it.name)}</div>
-              <div class="meta">${new Date(it.completedAt).toLocaleString()} • ${it.sizeMB} MB</div>
-            </div>
-            <div style="margin-left:12px;color:var(--muted);font-size:13px">✅</div>
-          </div>
-        </div>
-      `;
-      historyList.appendChild(row);
-    });
+  _randSpeed(){
+    // speed: percent per second (varies by size so larger files take longer)
+    return (Math.random() * 8) + (this.size > 50 ? 0.5 : 1.2);
   }
 
-  // مساعدة لإظهار HTML آمن في النص
-  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]); }
-
-  // إضافة مهمة
-  addBtn.addEventListener('click', ()=>{
-    const name = fileNameInput.value.trim() || `file-${Date.now()}.bin`;
-    const sizeMB = Number(sizeSelect.value);
-    enqueue({name, sizeMB});
-    fileNameInput.value = ''; // نظف الحقل
-  });
-
-  // enqueue
-  function enqueue(meta){
-    const id = 'd-'+Date.now()+'-'+Math.floor(Math.random()*9999);
-    const item = {
-      id, name: meta.name, sizeMB: meta.sizeMB,
-      progress:0, status:'queued', // queued | downloading | paused | cancelled | completed
-      speedKBs: null, // ستُحدد عند التشغيل
-      intervalRef: null
-    };
-    downloads.push(item);
-    renderQueue();
-    processQueue(); // حاول تشغيل أي مهام متاحة
-  }
-
-  // render queue
-  function renderQueue(){
-    queueEl.innerHTML = '';
-    if(!downloads.length){
-      queueEl.innerHTML = '<div class="note center">لا توجد مهام. أضف ملفاً للبدء.</div>';
-      return;
-    }
-
-    downloads.forEach(d=>{
-      const el = document.createElement('div');
-      el.className = 'item';
-      el.setAttribute('data-id', d.id);
-
-      const info = document.createElement('div');
-      info.className = 'info';
-      info.innerHTML = `
-        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
-          <div style="min-width:0">
-            <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(d.name)}</div>
-            <div class="meta">${d.sizeMB} MB • <span class="statusText">${d.status}</span></div>
-          </div>
-          <div style="width:140px;text-align:left">
-            <div class="tag" style="display:inline-block">${d.progress}%</div>
-          </div>
-        </div>
-        <div style="margin-top:8px">
-          <progress value="${d.progress}" max="100" aria-label="${escapeHtml(d.name)} progress"></progress>
-        </div>
-      `;
-
-      const actions = document.createElement('div');
-      actions.className = 'actions';
-      // buttons
-      const startBtn = document.createElement('button'); startBtn.className='btn small'; startBtn.innerText = '▶️ بدء';
-      const pauseBtn = document.createElement('button'); pauseBtn.className='btn ghost small'; pauseBtn.innerText = '⏸ إيقاف';
-      const cancelBtn = document.createElement('button'); cancelBtn.className='btn ghost small'; cancelBtn.innerText = '❌ إلغاء';
-      const moveTopBtn = document.createElement('button'); moveTopBtn.className='btn ghost small'; moveTopBtn.innerText = '▲';
-
-      // set initial visibility
-      startBtn.style.display = (d.status === 'queued' || d.status === 'paused') ? '' : 'none';
-      pauseBtn.style.display = (d.status === 'downloading') ? '' : 'none';
-
-      // handlers
-      startBtn.onclick = ()=> {
-        if(d.status === 'queued' || d.status === 'paused') {
-          d.status = 'queued'; // force in queue
-          renderQueue();
-          processQueue();
-        }
-      };
-      pauseBtn.onclick = ()=> {
-        if(d.status === 'downloading'){ d.status = 'paused'; stopDownloadTick(d); renderQueue(); running = Math.max(0, running-1); processQueue(); }
-      };
-      cancelBtn.onclick = ()=> {
-        // cancel and remove
-        stopDownloadTick(d);
-        d.status = 'cancelled';
-        renderQueue();
-        // remove after short delay
-        setTimeout(()=>{ downloads = downloads.filter(x=>x.id!==d.id); renderQueue(); }, 200);
-      };
-      moveTopBtn.onclick = ()=> {
-        // move to front of queue
-        downloads = downloads.filter(x=>x.id!==d.id);
-        downloads.unshift(d);
-        renderQueue();
-        processQueue();
-      };
-
-      actions.appendChild(moveTopBtn);
-      actions.appendChild(startBtn);
-      actions.appendChild(pauseBtn);
-      actions.appendChild(cancelBtn);
-
-      el.appendChild(info);
-      el.appendChild(actions);
-      queueEl.appendChild(el);
-    });
-
-    updateStatusTag();
-  }
-
-  // processQueue: start tasks if concurrency allows
-  function processQueue(){
-    if(running >= concurrency) return;
-    // find next queued task
-    const next = downloads.find(d=>d.status === 'queued');
-    if(!next) return;
-    // start it
-    startDownload(next);
-    // try again (in case concurrency allows multiple)
-    setTimeout(processQueue, 50);
-  }
-
-  // startDownload: simulate downloading
-  function startDownload(d){
-    if(d.status === 'downloading') return;
-    d.status = 'downloading';
-    // determine simulated speed: KB/s proportional to size (so big files take longer)
-    // but we randomize a bit:
-    const baseKBs = Math.max(20, Math.round(1500 / Math.log2(d.sizeMB + 4))); // heuristic
-    d.speedKBs = Math.max(30, Math.round(baseKBs * (0.7 + Math.random()*0.8)));
-    // compute total KB to download
-    const totalKB = d.sizeMB * 1024;
-    // set tick interval
-    running++;
-    d.intervalRef = setInterval(()=>{
-      if(d.status !== 'downloading'){ return; }
-      // advance
-      const chunkKB = d.speedKBs * (0.3 + Math.random()*0.7); // variability per tick
-      const downloadedKB = Math.round((d.progress/100) * totalKB);
-      const newDownloaded = Math.min(totalKB, downloadedKB + chunkKB);
-      d.progress = Math.round((newDownloaded / totalKB) * 100);
-      if(d.progress >= 100){
-        d.progress = 100;
-        finishDownload(d);
+  start(onUpdate,onComplete){
+    if(this.status === 'done' || this.status === 'running') return;
+    this.status = 'running';
+    this.speed = this._randSpeed();
+    const stepMs = 250;
+    this._interval = setInterval(()=>{
+      // variable increment to feel realistic
+      let delta = (this.speed * stepMs) / 1000;
+      // add small randomness
+      delta *= (0.6 + Math.random()*0.9);
+      this.progress = Math.min(100, this.progress + delta);
+      if(onUpdate) onUpdate(this);
+      if(this.progress >= 100){
+        this.complete(onComplete);
       }
-      renderQueue();
-    }, 350);
-    renderQueue();
+    }, stepMs);
   }
 
-  // stop tick
-  function stopDownloadTick(d){
-    if(d.intervalRef) { clearInterval(d.intervalRef); d.intervalRef = null; }
+  pause(onUpdate){
+    if(this._interval) clearInterval(this._interval);
+    this._interval = null;
+    if(this.status === 'running') this.status = 'paused';
+    if(onUpdate) onUpdate(this);
   }
 
-  // finish
-  function finishDownload(d){
-    stopDownloadTick(d);
-    d.status = 'completed';
-    d.progress = 100;
-    d.completedAt = Date.now();
-    running = Math.max(0, running-1);
-    // add to history
-    const hist = loadHistory();
-    hist.push({ id:d.id, name:d.name, sizeMB:d.sizeMB, completedAt:d.completedAt });
-    saveHistory(hist);
-    // remove from queue after short delay
-    renderQueue();
-    setTimeout(()=>{
-      downloads = downloads.filter(x=>x.id!==d.id);
-      renderQueue();
-      renderHistory();
-    }, 700);
+  cancel(onUpdate){
+    if(this._interval) clearInterval(this._interval);
+    this._interval = null;
+    this.status = 'canceled';
+    this.progress = 0;
+    if(onUpdate) onUpdate(this);
   }
 
-  // UI helpers
-  function updateStatusTag(){
-    const queued = downloads.filter(d=>d.status==='queued').length;
-    const active = downloads.filter(d=>d.status==='downloading').length;
-    const paused = downloads.filter(d=>d.status==='paused').length;
-    statusTag.innerText = `مشغول: ${active} • انتظار: ${queued} • موقوف: ${paused}`;
+  complete(onComplete){
+    if(this._interval) clearInterval(this._interval);
+    this._interval = null;
+    this.status = 'done';
+    this.progress = 100;
+    if(onComplete) onComplete(this);
+  }
+}
+
+// app data
+let downloads = state.map(d=> new DownloadItem(d));
+
+// save function
+function saveState(){
+  const payload = downloads.map(d=> ({
+    id:d.id, name:d.name, size:d.size, progress: Math.round(d.progress*100)/100, status:d.status
+  }));
+  localStorage.setItem(LS_KEY, JSON.stringify(payload));
+}
+
+// rendering
+const listEl = document.getElementById('downloads');
+
+function formatSize(mb){
+  if(mb >= 1024) return (mb/1024).toFixed(2) + ' GB';
+  return mb + ' MB';
+}
+
+function render(){
+  listEl.innerHTML = '';
+  if(downloads.length === 0){
+    const p = document.createElement('div');
+    p.style.color = 'var(--muted)';
+    p.style.padding = '24px';
+    p.style.border = '1px dashed rgba(255,255,255,0.03)';
+    p.style.borderRadius = '12px';
+    p.textContent = 'لا توجد تنزيلات — أضف ملفًا بالاسم والحجم ثم اضغط "أضف وتنزيل".';
+    listEl.appendChild(p);
+    return;
   }
 
-  // export / clear
-  exportBtn.addEventListener('click', ()=>{
-    const items = loadHistory();
-    const blob = new Blob([JSON.stringify(items, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'otakunova-history.json';
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-  });
-  clearHistory.addEventListener('click', ()=>{
-    if(!confirm('هل تريد مسح سجل التنزيلات المكتملة؟')) return;
-    localStorage.removeItem(completedKey);
-    renderHistory();
-  });
-  clearComplete.addEventListener('click', ()=>{
-    // remove completed from queue list if any (typically they are already moved to history)
-    downloads = downloads.filter(d=>d.status !== 'completed');
-    renderQueue();
-  });
+  downloads.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'dl-'+item.id;
 
-  // on load
-  renderHistory();
-  renderQueue();
+    // left
+    const left = document.createElement('div'); left.className='left';
+    const ico = document.createElement('div'); ico.className='file-ico'; ico.textContent = '📦';
+    const meta = document.createElement('div'); meta.className='meta';
+    const name = document.createElement('div'); name.className='name'; name.title = item.name;
+    name.textContent = item.name;
+    const sub = document.createElement('div'); sub.className='sub';
+    sub.textContent = formatSize(item.size) + ' • ' + (item.status==='done' ? 'مكتمل' : item.status);
+    meta.appendChild(name); meta.appendChild(sub);
+    left.appendChild(ico); left.appendChild(meta);
 
-  // accessibility: allow Enter to add
-  fileNameInput.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter') addBtn.click();
+    // progress
+    const right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='12px';
+    const progWrap = document.createElement('div'); progWrap.className='progress-wrap';
+    const prog = document.createElement('div'); prog.className='progress'; const inner = document.createElement('i');
+    inner.style.width = item.progress + '%';
+    prog.appendChild(inner);
+    const statusLine = document.createElement('div'); statusLine.className='status';
+    const perc = document.createElement('div'); perc.textContent = Math.round(item.progress) + '%';
+    const statText = document.createElement('div'); statText.style.color='var(--muted)'; statText.style.fontSize='13px';
+    statText.textContent = item.status === 'done' ? '✅ تم التحميل' : item.status === 'canceled' ? 'ملغى' : item.status;
+    statusLine.appendChild(statText); statusLine.appendChild(perc);
+    progWrap.appendChild(prog); progWrap.appendChild(statusLine);
+
+    // actions
+    const actions = document.createElement('div'); actions.className='actions';
+    // start/pause/resume button
+    const startBtn = document.createElement('button'); startBtn.className='small-btn';
+    if(item.status === 'running') startBtn.textContent = 'إيقاف';
+    else if(item.status === 'done') startBtn.textContent = 'مفتوح';
+    else startBtn.textContent = 'تشغيل';
+
+    // cancel button
+    const cancelBtn = document.createElement('button'); cancelBtn.className='small-btn';
+    cancelBtn.textContent = 'إلغاء';
+
+    // remove button
+    const removeBtn = document.createElement('button'); removeBtn.className='small-btn';
+    removeBtn.textContent = 'حذف';
+
+    // open / show
+    const openBtn = document.createElement('button'); openBtn.className='small-btn';
+    openBtn.textContent = item.status === 'done' ? 'فتح' : 'معلومات';
+
+    actions.appendChild(startBtn);
+    actions.appendChild(cancelBtn);
+    actions.appendChild(removeBtn);
+    actions.appendChild(openBtn);
+
+    right.appendChild(progWrap); right.appendChild(actions);
+
+    card.appendChild(left); card.appendChild(right);
+    listEl.appendChild(card);
+
+    // handlers
+    function updateView(it){
+      inner.style.width = it.progress + '%';
+      perc.textContent = Math.round(it.progress) + '%';
+      statText.textContent = it.status === 'done' ? '✅ تم التحميل' : it.status === 'canceled' ? 'ملغى' : it.status;
+      if(it.status === 'running') startBtn.textContent = 'إيقاف';
+      else if(it.status === 'paused') startBtn.textContent = 'استئناف';
+      else if(it.status === 'done') startBtn.textContent = 'مفتوح';
+      else startBtn.textContent = 'تشغيل';
+      // dim buttons if canceled/done
+      cancelBtn.disabled = (it.status === 'canceled' || it.status === 'done');
+    }
+
+    startBtn.addEventListener('click', ()=>{
+      if(item.status === 'running'){
+        item.pause(updateAndSave);
+      } else if(item.status === 'paused' || item.status === 'idle'){
+        item.start(updateAndSave, completeAndSave);
+      } else if(item.status === 'done'){
+        alert('الملف مفتوح (محاكاة). اسم الملف: ' + item.name);
+      } else {
+        // if canceled -> restart from 0
+        item.progress = 0;
+        item.status = 'idle';
+        item.start(updateAndSave, completeAndSave);
+      }
+      updateView(item);
+      saveState();
+    });
+
+    cancelBtn.addEventListener('click', ()=>{
+      if(confirm('هل تريد إلغاء هذا التنزيل؟')){
+        item.cancel(updateAndSave);
+        updateView(item);
+        saveState();
+      }
+    });
+
+    removeBtn.addEventListener('click', ()=>{
+      if(confirm('حذف العنصر نهائيًا؟')){
+        // stop interval and remove from array
+        item.cancel();
+        downloads = downloads.filter(d => d.id !== item.id);
+        saveState();
+        render();
+      }
+    });
+
+    openBtn.addEventListener('click', ()=>{
+      if(item.status === 'done'){
+        alert('فتح الملف (محاكاة): ' + item.name);
+      } else {
+        alert('معلومات: ' + item.name + '\\nالحجم: ' + formatSize(item.size) + '\\nالتقدم: ' + Math.round(item.progress) + '%\\nالحالة: ' + item.status);
+      }
+    });
+
+    // reflect initial state
+    updateView(item);
   });
+}
 
-  // small enhancement: resume any paused tasks automatically when leaving page after 30s? NO — keep manual control.
+// helper to update single item view and save
+function updateAndSave(it){
+  // do UI update for that card
+  const card = document.getElementById('dl-'+it.id);
+  if(card){
+    const inner = card.querySelector('.progress > i');
+    const perc = card.querySelector('.status div:last-child');
+    const statText = card.querySelector('.status div:first-child');
+    inner.style.width = it.progress + '%';
+    perc.textContent = Math.round(it.progress) + '%';
+    statText.textContent = it.status === 'done' ? '✅ تم التحميل' : it.status;
+  }
+  saveState();
+}
 
-  // visual: initial demo item to show behavior (uncomment to use)
-  // enqueue({name:'demo-small.txt', sizeMB:1});
-  // enqueue({name:'demo-big.zip', sizeMB:20});
-})();
+function completeAndSave(it){
+  updateAndSave(it);
+  // small celebration
+  try{
+    const card = document.getElementById('dl-'+it.id);
+    if(card){
+      card.style.boxShadow = '0 10px 30px rgba(46,204,113,0.06)';
+    }
+  }catch(e){}
+  saveState();
+}
+
+// controls binding
+document.getElementById('addBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('fileName').value.trim() || ('file-' + (downloads.length+1));
+  const sizeVal = Number(document.getElementById('fileSize').value) || (Math.floor(Math.random()*80)+2);
+  const item = new DownloadItem({name, size:sizeVal});
+  downloads.unshift(item);
+  saveState();
+  render();
+  // start immediately
+  item.start(updateAndSave, completeAndSave);
+});
+
+// clear all
+document.getElementById('clearAll').addEventListener('click', ()=>{
+  if(confirm('هل تريد مسح كل التنزيلات وحالتها المحفوظة؟')){
+    downloads.forEach(d => d.cancel());
+    downloads = [];
+    saveState();
+    render();
+  }
+});
+
+// restore running items on load (do not auto-start completed)
+function resumeRunning(){
+  downloads.forEach(d=>{
+    if(d.status === 'running'){
+      d.start(updateAndSave, completeAndSave);
+    }
+  });
+}
+
+// initial render
+render();
+resumeRunning();
+
+// autosave periodically
+setInterval(saveState, 5000);
+
+// keyboard: Enter in fileSize triggers add
+document.getElementById('fileSize').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') document.getElementById('addBtn').click();
+});
+
+// nice: when page unload, pause intervals (to avoid errors)
+window.addEventListener('beforeunload', ()=>{
+  downloads.forEach(d => d.pause());
+  saveState();
+});
 </script>
 </body>
 </html>
