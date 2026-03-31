@@ -1,1 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OtakuNova — المحرك الذكي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <header class="main-header">
+        <div class="logo-container">
+            <div class="neon-logo">ON</div>
+            <div class="brand-text">
+                <h1>أوتاكونوفا</h1>
+                <span>نظام الأرشفة المتقدم v3.0</span>
+            </div>
+        </div>
+        <div class="status-indicator">المحرك: <span id="engineStatus">جاهز</span></div>
+    </header>
+
+    <main class="app-container">
+        <section class="control-center animated-border-box">
+            <div class="card-content">
+                <h2>⚡ إنشاء مهمة جديدة</h2>
+                <div class="input-group">
+                    <label>اسم الملف / المانجا</label>
+                    <input type="text" id="fileName" placeholder="مثال: Solo Leveling Ch.150">
+                </div>
+                <div class="actions-row">
+                    <button id="addBtn" class="btn btn-neon-blue">إضافة للطابور</button>
+                    <button id="startBtn" class="btn btn-neon-purple">بدء المحرك</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="queue-section">
+            <h3 class="section-title">📂 المهام النشطة</h3>
+            <div id="queueList" class="tasks-grid">
+                </div>
+        </section>
+
+        <aside class="history-sidebar">
+            <div class="sidebar-header">
+                <h3>🕒 السجل</h3>
+                <span id="historyCount" class="badge">0</span>
+            </div>
+            <div id="historyList" class="history-items">
+                </div>
+        </aside>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
+2
