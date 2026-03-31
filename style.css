@@ -1,1 +1,115 @@
+:root {
+    --bg-dark: #050507;
+    --surface: #0e0e12;
+    --neon-blue: #00d2ff;
+    --neon-purple: #9d50bb;
+    --text-white: #f5f5f7;
+    --text-dim: #94a3b8;
+    --border-glow: rgba(157, 80, 187, 0.3);
+}
 
+* { box-sizing: border-box; transition: all 0.3s ease; }
+
+body {
+    margin: 0;
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: 'Noto Kufi Arabic', 'Plus Jakarta Sans', sans-serif;
+    overflow-x: hidden;
+}
+
+/* هيدر احترافي */
+.main-header {
+    padding: 1.5rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(5, 5, 7, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.neon-logo {
+    width: 50px; height: 50px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 20px;
+    box-shadow: 0 0 20px var(--border-glow);
+}
+
+/* تأثير الحواف المتحركة */
+.animated-border-box {
+    position: relative;
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 2px; /* سماكة الحافة */
+    overflow: hidden;
+}
+
+.animated-border-box::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(transparent, var(--neon-blue), var(--neon-purple), transparent);
+    animation: rotateBorder 4s linear infinite;
+}
+
+.card-content {
+    position: relative;
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 2rem;
+    z-index: 1;
+}
+
+@keyframes rotateBorder {
+    100% { transform: rotate(360deg); }
+}
+
+/* تصميم المدخلات والأزرار */
+input {
+    width: 100%;
+    background: #1a1a21;
+    border: 1px solid #2d2d3a;
+    padding: 1rem;
+    border-radius: 12px;
+    color: white;
+    margin-top: 0.5rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-neon-blue { background: var(--neon-blue); color: black; box-shadow: 0 0 15px rgba(0, 210, 255, 0.4); }
+.btn-neon-purple { background: var(--neon-purple); color: white; box-shadow: 0 0 15px rgba(157, 80, 187, 0.4); }
+
+/* شبكة المهام والسجل */
+.app-container {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    padding: 2rem 5%;
+}
+
+.task-card {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    height: 6px; background: #1a1a21; border-radius: 10px; margin: 10px 0;
+}
+.progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    width: 0%; border-radius: 10px;
+}
